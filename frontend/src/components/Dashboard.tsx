@@ -6,46 +6,65 @@ import {
   AlertTriangle,
   TrendingUp,
   Building2,
-  ArrowUp
+  ArrowUp,
+  Loader2
 } from 'lucide-react'
+import { useRevenue } from '../hooks/useRevenue'
 
 const Dashboard: React.FC = () => {
+  const { stats, loading, error } = useRevenue();
+
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  // Calculate growth rate percentage
+  const formatGrowthRate = (rate: number) => {
+    return rate > 0 ? `+${rate.toFixed(1)}%` : `${rate.toFixed(1)}%`;
+  };
+
   const metrics = [
     {
       id: 'revenue',
       icon: DollarSign,
       iconColor: '#10b981',
       iconBg: '#10b98120',
-      value: '$2.4M',
-      change: '+15.6%',
-      period: 'This Quarter'
+      value: stats ? formatCurrency(stats.totalRevenue) : '$0',
+      change: stats ? formatGrowthRate(stats.growthRate) : '+0%',
+      period: 'Total Revenue'
     },
     {
-      id: 'employees',
-      icon: Users,
+      id: 'average',
+      icon: TrendingUp,
       iconColor: '#3b82f6',
       iconBg: '#3b82f620',
-      value: '156',
+      value: stats ? formatCurrency(stats.averageRevenue) : '$0',
       change: '+8.3%',
-      period: 'vs Last Month'
+      period: 'Average Revenue'
     },
     {
-      id: 'inventory',
+      id: 'recent',
       icon: Package,
       iconColor: '#8b5cf6',
       iconBg: '#8b5cf620',
-      value: '$486K',
+      value: stats ? formatCurrency(stats.recentRevenue) : '$0',
       change: '+12.1%',
-      period: 'Current Stock'
+      period: 'Recent Revenue'
     },
     {
-      id: 'satisfaction',
+      id: 'growth',
       icon: MessageSquare,
       iconColor: '#f59e0b',
       iconBg: '#f59e0b20',
-      value: '94.2%',
+      value: stats ? `${stats.growthRate.toFixed(1)}%` : '0%',
       change: '+2.3%',
-      period: 'Average Rating'
+      period: 'Growth Rate'
     }
   ]
 
@@ -59,9 +78,9 @@ const Dashboard: React.FC = () => {
       status: 'Excellent',
       statusClass: 'status-excellent',
       metrics: [
-        { label: 'Revenue', value: '$2.4M' },
-        { label: 'Outstanding', value: '$45.2K' },
-        { label: 'Growth', value: '+15.6%' }
+        { label: 'Revenue', value: stats ? formatCurrency(stats.totalRevenue) : '$0' },
+        { label: 'Average', value: stats ? formatCurrency(stats.averageRevenue) : '$0' },
+        { label: 'Growth', value: stats ? formatGrowthRate(stats.growthRate) : '+0%' }
       ],
       alerts: null
     },
@@ -127,6 +146,28 @@ const Dashboard: React.FC = () => {
     }
   ]
 
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <div className="loading-container">
+          <Loader2 className="loading-spinner" size={48} />
+          <p>Loading revenue data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <div className="error-container">
+          <AlertTriangle size={48} color="#ef4444" />
+          <p>Error loading data: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard-container">
       <div className="insights-section">
@@ -143,13 +184,14 @@ const Dashboard: React.FC = () => {
                     color: metric.iconColor
                   }}
                 >
-                  <IconComponent size={28} />
+                  <IconComponent size={24} />
                 </div>
                 <div className="metric-content">
+                  <div className="metric-title">{metric.period}</div>
                   <div className="metric-value">{metric.value}</div>
                   <div className="metric-change">
                     <ArrowUp size={14} />
-                    {metric.change} {metric.period}
+                    {metric.change}
                   </div>
                 </div>
               </div>

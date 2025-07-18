@@ -4,6 +4,12 @@ node_modules/
 # Build output
 dist/
 
+# Database files
+data/
+*.db
+*.sqlite
+*.sqlite3
+
 # Environment variables
 .env
 .env.local
