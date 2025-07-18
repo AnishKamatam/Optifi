@@ -1,17 +1,1 @@
-.App {
-  text-align: center;
-  padding: 2rem;
-}
-
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-}
-
-.App-link {
-  color: #61dafb;
-} 
+/* App-specific styles moved to index.css */ 

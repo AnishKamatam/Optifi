@@ -1,13 +1,15 @@
-import React from 'react'
-import './App.css'
+import Sidebar from './components/Sidebar'
+import Header from './components/Header'
+import Dashboard from './components/Dashboard'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Welcome to Optifi</h1>
-        <p>Your frontend is ready!</p>
-      </header>
+      <Sidebar />
+      <div className="main-content">
+        <Header />
+        <Dashboard />
+      </div>
     </div>
   )
 }
