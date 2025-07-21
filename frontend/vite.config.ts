@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://andreas-bay-pure-realtors.trycloudflare.com',
+        target: 'https://below-jelsoft-lance-defects.trycloudflare.com',
         changeOrigin: true,
       },
     },

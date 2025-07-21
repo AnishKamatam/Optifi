@@ -7,15 +7,19 @@ import {
   Users 
 } from 'lucide-react'
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onNavigate: (page: string) => void;
+  currentPage: string;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onNavigate, currentPage }) => {
   const menuItems = [
     {
       id: 'dashboard',
       icon: LayoutGrid,
       title: 'Dashboard',
       subtitle: 'Company Overview',
-      count: null,
-      active: true
+      count: null
     },
     {
       id: 'finances',
@@ -70,7 +74,9 @@ const Sidebar: React.FC = () => {
           return (
             <div 
               key={item.id}
-              className={`nav-item ${item.active ? 'active' : ''}`}
+              className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
+              onClick={() => onNavigate(item.id)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="nav-icon">
                 <IconComponent size={20} />

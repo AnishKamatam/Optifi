@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://andreas-bay-pure-realtors.trycloudflare.com';
+const API_BASE_URL = 'https://below-jelsoft-lance-defects.trycloudflare.com';
 
 export interface RevenueStats {
   totalRevenue: number;

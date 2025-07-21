@@ -7,7 +7,13 @@ import {
   TrendingUp,
   Building2,
   ArrowUp,
-  Loader2
+  Loader2,
+  Zap,
+  Calendar,
+  FileText,
+  UserPlus,
+  Clock,
+  Eye
 } from 'lucide-react'
 import { useRevenue } from '../hooks/useRevenue'
 
@@ -40,31 +46,105 @@ const Dashboard: React.FC = () => {
       period: 'Total Revenue'
     },
     {
-      id: 'average',
-      icon: TrendingUp,
+      id: 'employees',
+      icon: Users,
       iconColor: '#3b82f6',
       iconBg: '#3b82f620',
-      value: stats ? formatCurrency(stats.averageRevenue) : '$0',
+      value: '156',
       change: '+8.3%',
-      period: 'Average Revenue'
+      period: 'Active Employees'
     },
     {
-      id: 'recent',
+      id: 'inventory',
       icon: Package,
       iconColor: '#8b5cf6',
       iconBg: '#8b5cf620',
-      value: stats ? formatCurrency(stats.recentRevenue) : '$0',
+      value: '$486K',
       change: '+12.1%',
-      period: 'Recent Revenue'
+      period: 'Inventory Value'
     },
     {
-      id: 'growth',
-      icon: MessageSquare,
+      id: 'health',
+      icon: TrendingUp,
       iconColor: '#f59e0b',
       iconBg: '#f59e0b20',
-      value: stats ? `${stats.growthRate.toFixed(1)}%` : '0%',
+      value: '94.2%',
       change: '+2.3%',
-      period: 'Growth Rate'
+      period: 'Financial Health Score'
+    }
+  ]
+
+  const recentActivities = [
+    {
+      id: 1,
+      title: 'Q4 Financial Report Completed',
+      category: 'Finances',
+      timeAgo: '2 hours ago',
+      icon: FileText,
+      iconColor: '#10b981'
+    },
+    {
+      id: 2,
+      title: 'Inventory Low Stock Alert',
+      category: 'Inventory',
+      timeAgo: '4 hours ago',
+      icon: Package,
+      iconColor: '#f59e0b'
+    },
+    {
+      id: 3,
+      title: 'Major Deal Closed - TechCorp',
+      category: 'Sales & CRM',
+      timeAgo: '6 hours ago',
+      icon: TrendingUp,
+      iconColor: '#10b981'
+    },
+    {
+      id: 4,
+      title: 'New Employee Onboarding',
+      category: 'HR & Admin',
+      timeAgo: '1 day ago',
+      icon: UserPlus,
+      iconColor: '#3b82f6'
+    },
+    {
+      id: 5,
+      title: 'Operations Review Meeting',
+      category: 'Operations',
+      timeAgo: '2 days ago',
+      icon: Building2,
+      iconColor: '#8b5cf6'
+    }
+  ]
+
+  const upcomingEvents = [
+    {
+      id: 1,
+      title: 'Board Meeting',
+      time: 'Today, 3:00 PM',
+      priority: 'high',
+      attendees: '12 attendees'
+    },
+    {
+      id: 2,
+      title: 'All Hands Meeting',
+      time: 'Tomorrow, 10:00 AM',
+      priority: 'medium',
+      attendees: '156 attendees'
+    },
+    {
+      id: 3,
+      title: 'Product Launch Review',
+      time: 'Friday, 2:00 PM',
+      priority: 'high',
+      attendees: '25 attendees'
+    },
+    {
+      id: 4,
+      title: 'Monthly Performance Review',
+      time: 'Next Monday',
+      priority: 'medium',
+      attendees: '8 attendees'
     }
   ]
 
@@ -171,7 +251,6 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-container">
       <div className="insights-section">
-        <h2 className="insights-title">Real-time insights across all business operations</h2>
         <div className="metrics-grid">
           {metrics.map((metric) => {
             const IconComponent = metric.icon
@@ -200,8 +279,8 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      <h2 className="insights-title">Department Summary</h2>
       <div className="department-section">
-        <h2 className="insights-title">Department Summary</h2>
         <div className="department-grid">
           {departments.map((dept) => {
             const IconComponent = dept.icon
@@ -216,7 +295,7 @@ const Dashboard: React.FC = () => {
                         color: dept.iconColor
                       }}
                     >
-                      <IconComponent size={18} />
+                      <IconComponent size={16} />
                     </div>
                     {dept.title}
                   </div>
@@ -237,12 +316,76 @@ const Dashboard: React.FC = () => {
                 {dept.alerts && (
                   <div className="department-alerts">
                     <AlertTriangle size={12} />
-                    ▲ {dept.alerts} alerts
+                    {dept.alerts} alerts
                   </div>
                 )}
               </div>
             )
           })}
+        </div>
+      </div>
+
+      <div className="activity-events-section">
+        <div className="activity-section">
+          <div className="section-header">
+            <div className="section-title">
+              <Zap size={20} />
+              <h3>Recent Activity</h3>
+            </div>
+            <button className="view-all-btn">
+              <Eye size={16} />
+              View All
+            </button>
+          </div>
+          <div className="activity-list">
+            {recentActivities.map((activity) => {
+              const IconComponent = activity.icon
+              return (
+                <div key={activity.id} className="activity-item">
+                  <div className="activity-icon" style={{ color: activity.iconColor }}>
+                    <IconComponent size={16} />
+                  </div>
+                  <div className="activity-content">
+                    <div className="activity-title">{activity.title}</div>
+                    <div className="activity-category">{activity.category}</div>
+                  </div>
+                  <div className="activity-time">{activity.timeAgo}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="events-section">
+          <div className="section-header">
+            <div className="section-title">
+              <Calendar size={20} />
+              <h3>Upcoming Events</h3>
+            </div>
+            <button className="view-all-btn">
+              <Calendar size={16} />
+              View Calendar
+            </button>
+          </div>
+          <div className="events-list">
+            {upcomingEvents.map((event) => (
+              <div key={event.id} className="event-item">
+                <div className="event-icon">
+                  <Calendar size={16} />
+                </div>
+                <div className="event-content">
+                  <div className="event-title">{event.title}</div>
+                  <div className="event-time">{event.time}</div>
+                </div>
+                <div className="event-details">
+                  <div className={`priority-badge priority-${event.priority}`}>
+                    {event.priority}
+                  </div>
+                  <div className="event-attendees">{event.attendees}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
