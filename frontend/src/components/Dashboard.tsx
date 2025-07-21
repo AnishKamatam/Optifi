@@ -2,7 +2,6 @@ import {
   DollarSign, 
   Users, 
   Package, 
-  MessageSquare, 
   AlertTriangle,
   TrendingUp,
   Building2,
@@ -12,7 +11,6 @@ import {
   Calendar,
   FileText,
   UserPlus,
-  Clock,
   Eye
 } from 'lucide-react'
 import { useRevenue } from '../hooks/useRevenue'

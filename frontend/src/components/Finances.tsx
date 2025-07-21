@@ -1,15 +1,25 @@
 import { 
-  TrendingUp, 
-  TrendingDown,
-  DollarSign,
-  Users,
-  Building2,
-  Package,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  MoreHorizontal
 } from 'lucide-react'
+import { Doughnut } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { useRevenue } from '../hooks/useRevenue'
+
+ChartJS.register(ArcElement, Tooltip, Legend)
 
 const Finances: React.FC = () => {
+  const { stats, loading, error } = useRevenue();
   // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -25,97 +35,106 @@ const Finances: React.FC = () => {
     return new Intl.NumberFormat('en-US').format(num);
   };
 
+  // Calculate growth rate percentage
+  const formatGrowthRate = (rate: number) => {
+    return rate > 0 ? `+${rate.toFixed(1)}%` : `${rate.toFixed(1)}%`;
+  };
+
   const financialMetrics = [
     {
       id: 'revenue',
-      title: 'Revenue',
-      period: 'Jun 2025',
-      currentValue: 499521,
-      change: -17.47,
-      changeType: 'decrease',
+      title: 'Total Revenue',
+      period: 'Current Period',
+      currentValue: stats ? stats.totalRevenue : 0,
+      change: stats ? stats.growthRate : 0,
+      changeType: stats && stats.growthRate > 0 ? 'increase' : 'decrease',
       additionalMetrics: [
-        { label: '3 month rolling average', value: formatCurrency(535355.87) }
+        { label: 'Average Revenue', value: formatCurrency(stats ? stats.averageRevenue : 0) },
+        { label: 'Recent Revenue', value: formatCurrency(stats ? stats.recentRevenue : 0) }
+      ]
+    },
+    {
+      id: 'employees',
+      title: 'Active Employees',
+      period: 'Current Period',
+      currentValue: 156,
+      change: 8.3,
+      changeType: 'increase',
+      additionalMetrics: [
+        { label: 'Department Count', value: '8' },
+        { label: 'Growth Rate', value: '+8.3%' }
+      ]
+    },
+    {
+      id: 'inventory',
+      title: 'Inventory Value',
+      period: 'Current Period',
+      currentValue: 486000,
+      change: 12.1,
+      changeType: 'increase',
+      additionalMetrics: [
+        { label: 'Total Items', value: formatLargeNumber(1247) },
+        { label: 'Growth Rate', value: '+12.1%' }
+      ]
+    },
+    {
+      id: 'health',
+      title: 'Financial Health Score',
+      period: 'Current Period',
+      currentValue: 94.2,
+      change: 2.3,
+      changeType: 'increase',
+      additionalMetrics: [
+        { label: 'Risk Level', value: 'Low' },
+        { label: 'Growth Rate', value: '+2.3%' }
       ]
     },
     {
       id: 'netIncome',
       title: 'Net Income (Loss)',
-      period: 'Jun 2025',
-      currentValue: -9215,
-      change: 107.26,
-      changeType: 'decrease',
+      period: 'Current Period',
+      currentValue: stats ? stats.totalRevenue * 0.15 : 0, // Estimated 15% profit margin
+      change: stats ? stats.growthRate * 0.8 : 0,
+      changeType: stats && stats.growthRate > 0 ? 'increase' : 'decrease',
       additionalMetrics: [
-        { label: '3 month rolling average', value: formatCurrency(45933.21) }
-      ]
-    },
-    {
-      id: 'loansFunded',
-      title: 'Loans Funded',
-      period: 'Jun 2025',
-      currentValue: 600163628,
-      change: 7.29,
-      changeType: 'increase',
-      additionalMetrics: [
-        { label: 'YTD', value: formatLargeNumber(3224684827) },
-        { label: 'total', value: formatLargeNumber(6065072192) }
-      ]
-    },
-    {
-      id: 'numLoansFunded',
-      title: '# Of Loans Funded',
-      period: 'Jun 2025',
-      currentValue: 1033,
-      change: 2.99,
-      changeType: 'increase',
-      additionalMetrics: [
-        { label: 'YTD', value: formatLargeNumber(5715) },
-        { label: 'total', value: formatLargeNumber(10993) }
+        { label: 'Profit Margin', value: '15.0%' },
+        { label: 'YTD Growth', value: formatGrowthRate(stats ? stats.growthRate * 0.8 : 0) }
       ]
     },
     {
       id: 'bankBalance',
       title: 'Bank Balance',
-      period: 'Jun 2025',
-      currentValue: 960266,
+      period: 'Current Period',
+      currentValue: stats ? stats.totalRevenue * 0.3 : 0, // Estimated 30% of revenue
       change: 14.73,
       changeType: 'increase',
       additionalMetrics: [
-        { label: '3 month rolling average', value: formatCurrency(827460.32) }
+        { label: 'Cash Flow', value: 'Positive' },
+        { label: 'Growth Rate', value: '+14.7%' }
       ]
     },
     {
       id: 'workingCapital',
-      title: 'Working Capital (Cash + AR - AP - HST)',
-      period: 'Jun 2025',
-      currentValue: 491735,
+      title: 'Working Capital',
+      period: 'Current Period',
+      currentValue: stats ? stats.totalRevenue * 0.25 : 0, // Estimated 25% of revenue
       change: 17.69,
       changeType: 'increase',
       additionalMetrics: [
-        { label: '3 month rolling average', value: formatCurrency(366930.06) }
+        { label: 'Liquidity Ratio', value: '2.1' },
+        { label: 'Growth Rate', value: '+17.7%' }
       ]
     },
     {
       id: 'loansProcessed',
       title: 'Loans Processed',
-      period: 'Jun 2025',
-      currentValue: 2226833517,
+      period: 'Current Period',
+      currentValue: stats ? stats.totalRevenue * 2.5 : 0, // Estimated multiplier
       change: -14.82,
       changeType: 'decrease',
       additionalMetrics: [
-        { label: 'YTD', value: formatLargeNumber(14225022481) },
-        { label: 'total', value: formatLargeNumber(27169819975) }
-      ]
-    },
-    {
-      id: 'numLoansProcessed',
-      title: '# Of Loans Processed',
-      period: 'Jun 2025',
-      currentValue: 3919,
-      change: -11.89,
-      changeType: 'decrease',
-      additionalMetrics: [
-        { label: 'YTD', value: formatLargeNumber(24152) },
-        { label: 'total', value: formatLargeNumber(46213) }
+        { label: 'Success Rate', value: '94.2%' },
+        { label: 'Growth Rate', value: '-14.8%' }
       ]
     }
   ];
@@ -151,7 +170,11 @@ const Finances: React.FC = () => {
             
             <div className="finance-value">
               {metric.currentValue < 0 ? '-' : ''}
-              {metric.title.includes('#') || metric.title.includes('Loans') 
+              {metric.id === 'employees' 
+                ? formatLargeNumber(Math.abs(metric.currentValue))
+                : metric.id === 'health'
+                ? `${Math.abs(metric.currentValue).toFixed(1)}%`
+                : metric.title.includes('Loans') 
                 ? formatLargeNumber(Math.abs(metric.currentValue))
                 : formatCurrency(Math.abs(metric.currentValue))
               }
@@ -163,7 +186,7 @@ const Finances: React.FC = () => {
               ) : (
                 <ArrowDown size={14} />
               )}
-              {Math.abs(metric.change).toFixed(2)}% from last month
+              {formatGrowthRate(metric.change)} from last month
             </div>
             
             <div className="finance-additional">
@@ -175,6 +198,92 @@ const Finances: React.FC = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Recent Invoices Section */}
+      <div className="recent-invoices-section">
+        <div className="invoices-header">
+          <h2 className="invoices-title">Recent Invoices</h2>
+          <div className="invoices-controls">
+            <div className="search-container">
+              <Search size={16} className="search-icon" />
+              <input 
+                type="text" 
+                placeholder="Search invoices..." 
+                className="search-input"
+              />
+            </div>
+            <button className="filter-btn">
+              <Filter size={16} />
+              Filter
+            </button>
+          </div>
+        </div>
+        
+        <div className="invoices-table-container">
+          <table className="invoices-table">
+            <thead>
+              <tr>
+                <th>Invoice ID</th>
+                <th>Client</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>INV-001</td>
+                <td>TechCorp</td>
+                <td>$12,500</td>
+                <td><span className="status-badge paid">Paid</span></td>
+                <td>2024-01-15</td>
+                <td className="actions-cell">
+                  <button className="action-icon" title="View invoice"><Eye size={14} /></button>
+                  <button className="action-icon" title="Edit invoice"><Edit size={14} /></button>
+                  <button className="action-icon" title="More options"><MoreHorizontal size={14} /></button>
+                </td>
+              </tr>
+              <tr>
+                <td>INV-002</td>
+                <td>StartupInc</td>
+                <td>$8,750</td>
+                <td><span className="status-badge pending">Pending</span></td>
+                <td>2024-01-14</td>
+                <td className="actions-cell">
+                  <button className="action-icon" title="View invoice"><Eye size={14} /></button>
+                  <button className="action-icon" title="Edit invoice"><Edit size={14} /></button>
+                  <button className="action-icon" title="More options"><MoreHorizontal size={14} /></button>
+                </td>
+              </tr>
+              <tr>
+                <td>INV-003</td>
+                <td>BigCorp</td>
+                <td>$25,000</td>
+                <td><span className="status-badge overdue">Overdue</span></td>
+                <td>2024-01-10</td>
+                <td className="actions-cell">
+                  <button className="action-icon" title="View invoice"><Eye size={14} /></button>
+                  <button className="action-icon" title="Edit invoice"><Edit size={14} /></button>
+                  <button className="action-icon" title="More options"><MoreHorizontal size={14} /></button>
+                </td>
+              </tr>
+              <tr>
+                <td>INV-004</td>
+                <td>SmallBiz</td>
+                <td>$3,200</td>
+                <td><span className="status-badge paid">Paid</span></td>
+                <td>2024-01-12</td>
+                <td className="actions-cell">
+                  <button className="action-icon"><Eye size={14} /></button>
+                  <button className="action-icon"><Edit size={14} /></button>
+                  <button className="action-icon"><MoreHorizontal size={14} /></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="finances-dashboard">
@@ -336,78 +445,60 @@ const Finances: React.FC = () => {
           <div className="dashboard-panel">
             <h3 className="panel-title">Expenses By Department - Monthly</h3>
             <div className="donut-chart-container">
-              <div className="donut-chart-wrapper">
-                <div className="donut-chart">
-                  <svg width="200" height="200" viewBox="0 0 200 200">
-                    {/* Research & Development - 80.7% (290.52 degrees) */}
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="80"
-                      fill="none"
-                      stroke="#6b7280"
-                      strokeWidth="20"
-                      strokeDasharray="402.12 100"
-                      strokeDashoffset="0"
-                      transform="rotate(-90 100 100)"
-                    />
-                    {/* General & Administrative - 12.3% (44.28 degrees) */}
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="80"
-                      fill="none"
-                      stroke="#9ca3af"
-                      strokeWidth="20"
-                      strokeDasharray="60.32 100"
-                      strokeDashoffset="-402.12"
-                      transform="rotate(-90 100 100)"
-                    />
-                    {/* Sales & Marketing - 7.0% (25.2 degrees) */}
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="80"
-                      fill="none"
-                      stroke="#10b981"
-                      strokeWidth="20"
-                      strokeDasharray="35.04 100"
-                      strokeDashoffset="-462.44"
-                      transform="rotate(-90 100 100)"
-                    />
-                  </svg>
-                  <div className="donut-center">
-                    <div className="donut-total">100%</div>
-                  </div>
-                </div>
-                
-                {/* Percentage Labels with Lines */}
-                <div className="percentage-label rnd-label">
-                  <div className="label-line"></div>
-                  <div className="label-text">80.7%</div>
-                </div>
-                <div className="percentage-label admin-label">
-                  <div className="label-line"></div>
-                  <div className="label-text">12.3%</div>
-                </div>
-                <div className="percentage-label sales-label">
-                  <div className="label-line"></div>
-                  <div className="label-text">7.0%</div>
-                </div>
-              </div>
-              
+              <Doughnut
+                data={{
+                  labels: ['Research & Development', 'General & Administrative', 'Sales & Marketing'],
+                  datasets: [
+                    {
+                      data: [80.7, 12.3, 7.0],
+                      backgroundColor: ['#6b7280', '#9ca3af', '#10b981'],
+                      borderColor: ['#6b7280', '#9ca3af', '#10b981'],
+                      borderWidth: 0,
+                      cutout: '70%',
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltip: {
+                      backgroundColor: '#1f2937',
+                      titleColor: '#ffffff',
+                      bodyColor: '#e5e5e5',
+                      borderColor: '#374151',
+                      borderWidth: 1,
+                      callbacks: {
+                        label: function(context) {
+                          return `${context.label}: ${context.parsed}%`;
+                        }
+                      }
+                    }
+                  },
+                  elements: {
+                    arc: {
+                      borderWidth: 0,
+                    }
+                  }
+                }}
+                height={200}
+                width={200}
+              />
               <div className="donut-legend">
                 <div className="legend-item">
                   <div className="legend-color rnd"></div>
-                  <span>Research & Development</span>
+                  <span>Research & Development (80.7%)</span>
                 </div>
                 <div className="legend-item">
                   <div className="legend-color admin"></div>
-                  <span>General & Administrative</span>
+                  <span>General & Administrative (12.3%)</span>
                 </div>
                 <div className="legend-item">
                   <div className="legend-color sales"></div>
-                  <span>Sales & Marketing</span>
+                  <span>Sales & Marketing (7.0%)</span>
                 </div>
               </div>
             </div>
