@@ -6,6 +6,8 @@ import {
   TrendingUp,
   Building2,
   ArrowUp,
+  ArrowDown,
+  Minus,
   Loader2,
   Zap,
   Calendar,
@@ -33,15 +35,30 @@ const Dashboard: React.FC = () => {
     return rate > 0 ? `+${rate.toFixed(1)}%` : `${rate.toFixed(1)}%`;
   };
 
+  // Helper function to get color based on growth rate
+  const getGrowthColor = (rate: number) => {
+    if (rate > 0) {
+      return { color: '#10b981', bg: '#10b98120' }; // Green for positive
+    } else if (rate < 0) {
+      return { color: '#ef4444', bg: '#ef444420' }; // Red for negative
+    } else {
+      return { color: '#6b7280', bg: '#6b728020' }; // Gray for neutral
+    }
+  };
+
+  const revenueGrowth = stats?.growthRate || 0;
+  const revenueColors = getGrowthColor(revenueGrowth);
+
   const metrics = [
     {
       id: 'revenue',
       icon: DollarSign,
-      iconColor: '#10b981',
-      iconBg: '#10b98120',
+      iconColor: revenueColors.color,
+      iconBg: revenueColors.bg,
       value: stats ? formatCurrency(stats.totalRevenue) : '$0',
       change: stats ? formatGrowthRate(stats.growthRate) : '+0%',
-      period: 'Total Revenue'
+      period: 'Total Revenue',
+      growthRate: revenueGrowth
     },
     {
       id: 'employees',
@@ -50,7 +67,8 @@ const Dashboard: React.FC = () => {
       iconBg: '#3b82f620',
       value: '156',
       change: '+8.3%',
-      period: 'Active Employees'
+      period: 'Active Employees',
+      growthRate: 8.3
     },
     {
       id: 'inventory',
@@ -59,7 +77,8 @@ const Dashboard: React.FC = () => {
       iconBg: '#8b5cf620',
       value: '$486K',
       change: '+12.1%',
-      period: 'Inventory Value'
+      period: 'Inventory Value',
+      growthRate: 12.1
     },
     {
       id: 'health',
@@ -68,7 +87,8 @@ const Dashboard: React.FC = () => {
       iconBg: '#f59e0b20',
       value: '94.2%',
       change: '+2.3%',
-      period: 'Financial Health Score'
+      period: 'Financial Health Score',
+      growthRate: 2.3
     }
   ]
 
@@ -267,8 +287,16 @@ const Dashboard: React.FC = () => {
                   <div className="metric-title">{metric.period}</div>
                   <div className="metric-value">{metric.value}</div>
                   <div className="metric-change">
-                    <ArrowUp size={14} />
-                    {metric.change}
+                    {metric.growthRate > 0 ? (
+                      <ArrowUp size={14} />
+                    ) : metric.growthRate < 0 ? (
+                      <ArrowDown size={14} color="#ef4444" />
+                    ) : (
+                      <Minus size={14} />
+                    )}
+                    <span style={{ color: metric.growthRate < 0 ? '#ef4444' : 'inherit' }}>
+                      {metric.change}
+                    </span>
                   </div>
                 </div>
               </div>

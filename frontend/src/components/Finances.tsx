@@ -220,7 +220,7 @@ const Finances: React.FC = () => {
             <tbody>
               <tr>
                 <td>INV-001</td>
-                <td>TechCorp</td>
+                <td>Calvert</td>
                 <td>$12,500</td>
                 <td><span className="status-badge paid">Paid</span></td>
                 <td>2024-01-15</td>
@@ -232,7 +232,7 @@ const Finances: React.FC = () => {
               </tr>
               <tr>
                 <td>INV-002</td>
-                <td>StartupInc</td>
+                <td>MCU</td>
                 <td>$8,750</td>
                 <td><span className="status-badge pending">Pending</span></td>
                 <td>2024-01-14</td>
@@ -244,7 +244,7 @@ const Finances: React.FC = () => {
               </tr>
               <tr>
                 <td>INV-003</td>
-                <td>BigCorp</td>
+                <td>EQ</td>
                 <td>$25,000</td>
                 <td><span className="status-badge overdue">Overdue</span></td>
                 <td>2024-01-10</td>
@@ -256,7 +256,7 @@ const Finances: React.FC = () => {
               </tr>
               <tr>
                 <td>INV-004</td>
-                <td>SmallBiz</td>
+                <td>RMC</td>
                 <td>$3,200</td>
                 <td><span className="status-badge paid">Paid</span></td>
                 <td>2024-01-12</td>
