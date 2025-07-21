@@ -14,12 +14,10 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
-import { useRevenue } from '../hooks/useRevenue'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const Finances: React.FC = () => {
-  const { stats, loading, error } = useRevenue();
   // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -35,106 +33,97 @@ const Finances: React.FC = () => {
     return new Intl.NumberFormat('en-US').format(num);
   };
 
-  // Calculate growth rate percentage
-  const formatGrowthRate = (rate: number) => {
-    return rate > 0 ? `+${rate.toFixed(1)}%` : `${rate.toFixed(1)}%`;
-  };
-
   const financialMetrics = [
     {
       id: 'revenue',
-      title: 'Total Revenue',
-      period: 'Current Period',
-      currentValue: stats ? stats.totalRevenue : 0,
-      change: stats ? stats.growthRate : 0,
-      changeType: stats && stats.growthRate > 0 ? 'increase' : 'decrease',
+      title: 'Revenue',
+      period: 'Jun 2025',
+      currentValue: 499521,
+      change: -17.47,
+      changeType: 'decrease',
       additionalMetrics: [
-        { label: 'Average Revenue', value: formatCurrency(stats ? stats.averageRevenue : 0) },
-        { label: 'Recent Revenue', value: formatCurrency(stats ? stats.recentRevenue : 0) }
-      ]
-    },
-    {
-      id: 'employees',
-      title: 'Active Employees',
-      period: 'Current Period',
-      currentValue: 156,
-      change: 8.3,
-      changeType: 'increase',
-      additionalMetrics: [
-        { label: 'Department Count', value: '8' },
-        { label: 'Growth Rate', value: '+8.3%' }
-      ]
-    },
-    {
-      id: 'inventory',
-      title: 'Inventory Value',
-      period: 'Current Period',
-      currentValue: 486000,
-      change: 12.1,
-      changeType: 'increase',
-      additionalMetrics: [
-        { label: 'Total Items', value: formatLargeNumber(1247) },
-        { label: 'Growth Rate', value: '+12.1%' }
-      ]
-    },
-    {
-      id: 'health',
-      title: 'Financial Health Score',
-      period: 'Current Period',
-      currentValue: 94.2,
-      change: 2.3,
-      changeType: 'increase',
-      additionalMetrics: [
-        { label: 'Risk Level', value: 'Low' },
-        { label: 'Growth Rate', value: '+2.3%' }
+        { label: '3 month rolling average', value: formatCurrency(535355.87) }
       ]
     },
     {
       id: 'netIncome',
       title: 'Net Income (Loss)',
-      period: 'Current Period',
-      currentValue: stats ? stats.totalRevenue * 0.15 : 0, // Estimated 15% profit margin
-      change: stats ? stats.growthRate * 0.8 : 0,
-      changeType: stats && stats.growthRate > 0 ? 'increase' : 'decrease',
+      period: 'Jun 2025',
+      currentValue: -9215,
+      change: 107.26,
+      changeType: 'decrease',
       additionalMetrics: [
-        { label: 'Profit Margin', value: '15.0%' },
-        { label: 'YTD Growth', value: formatGrowthRate(stats ? stats.growthRate * 0.8 : 0) }
+        { label: '3 month rolling average', value: formatCurrency(45933.21) }
+      ]
+    },
+    {
+      id: 'loansFunded',
+      title: 'Loans Funded',
+      period: 'Jun 2025',
+      currentValue: 600163628,
+      change: 7.29,
+      changeType: 'increase',
+      additionalMetrics: [
+        { label: 'YTD', value: formatLargeNumber(3224684827) },
+        { label: 'total', value: formatLargeNumber(6065072192) }
+      ]
+    },
+    {
+      id: 'numLoansFunded',
+      title: '# Of Loans Funded',
+      period: 'Jun 2025',
+      currentValue: 1033,
+      change: 2.99,
+      changeType: 'increase',
+      additionalMetrics: [
+        { label: 'YTD', value: formatLargeNumber(5715) },
+        { label: 'total', value: formatLargeNumber(10993) }
       ]
     },
     {
       id: 'bankBalance',
       title: 'Bank Balance',
-      period: 'Current Period',
-      currentValue: stats ? stats.totalRevenue * 0.3 : 0, // Estimated 30% of revenue
+      period: 'Jun 2025',
+      currentValue: 960266,
       change: 14.73,
       changeType: 'increase',
       additionalMetrics: [
-        { label: 'Cash Flow', value: 'Positive' },
-        { label: 'Growth Rate', value: '+14.7%' }
+        { label: '3 month rolling average', value: formatCurrency(827460.32) }
       ]
     },
     {
       id: 'workingCapital',
-      title: 'Working Capital',
-      period: 'Current Period',
-      currentValue: stats ? stats.totalRevenue * 0.25 : 0, // Estimated 25% of revenue
+      title: 'Working Capital (Cash + AR - AP - HST)',
+      period: 'Jun 2025',
+      currentValue: 491735,
       change: 17.69,
       changeType: 'increase',
       additionalMetrics: [
-        { label: 'Liquidity Ratio', value: '2.1' },
-        { label: 'Growth Rate', value: '+17.7%' }
+        { label: '3 month rolling average', value: formatCurrency(366930.06) }
       ]
     },
     {
       id: 'loansProcessed',
       title: 'Loans Processed',
-      period: 'Current Period',
-      currentValue: stats ? stats.totalRevenue * 2.5 : 0, // Estimated multiplier
+      period: 'Jun 2025',
+      currentValue: 2226833517,
       change: -14.82,
       changeType: 'decrease',
       additionalMetrics: [
-        { label: 'Success Rate', value: '94.2%' },
-        { label: 'Growth Rate', value: '-14.8%' }
+        { label: 'YTD', value: formatLargeNumber(14225022481) },
+        { label: 'total', value: formatLargeNumber(27169819975) }
+      ]
+    },
+    {
+      id: 'numLoansProcessed',
+      title: '# Of Loans Processed',
+      period: 'Jun 2025',
+      currentValue: 3919,
+      change: -11.89,
+      changeType: 'decrease',
+      additionalMetrics: [
+        { label: 'YTD', value: formatLargeNumber(24152) },
+        { label: 'total', value: formatLargeNumber(46213) }
       ]
     }
   ];
@@ -170,11 +159,7 @@ const Finances: React.FC = () => {
             
             <div className="finance-value">
               {metric.currentValue < 0 ? '-' : ''}
-              {metric.id === 'employees' 
-                ? formatLargeNumber(Math.abs(metric.currentValue))
-                : metric.id === 'health'
-                ? `${Math.abs(metric.currentValue).toFixed(1)}%`
-                : metric.title.includes('Loans') 
+              {metric.title.includes('#') || metric.title.includes('Loans') 
                 ? formatLargeNumber(Math.abs(metric.currentValue))
                 : formatCurrency(Math.abs(metric.currentValue))
               }
@@ -186,7 +171,7 @@ const Finances: React.FC = () => {
               ) : (
                 <ArrowDown size={14} />
               )}
-              {formatGrowthRate(metric.change)} from last month
+              {Math.abs(metric.change).toFixed(2)}% from last month
             </div>
             
             <div className="finance-additional">
@@ -454,13 +439,13 @@ const Finances: React.FC = () => {
                       backgroundColor: ['#6b7280', '#9ca3af', '#10b981'],
                       borderColor: ['#6b7280', '#9ca3af', '#10b981'],
                       borderWidth: 0,
-                      cutout: '70%',
                     },
                   ],
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
+                  cutout: '70%',
                   plugins: {
                     legend: {
                       display: false,

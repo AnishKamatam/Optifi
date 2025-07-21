@@ -13,10 +13,10 @@ import {
   UserPlus,
   Eye
 } from 'lucide-react'
-import { useRevenue } from '../hooks/useRevenue'
+import { useFinancialMetrics } from '../hooks/useFinancialMetrics'
 
 const Dashboard: React.FC = () => {
-  const { stats, loading, error } = useRevenue();
+  const { stats, loading, error } = useFinancialMetrics();
 
   // Format currency
   const formatCurrency = (amount: number) => {

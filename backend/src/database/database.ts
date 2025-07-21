@@ -16,58 +16,130 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Initialize database tables
 function initializeTables() {
-  // Revenue table
+  // Financial metrics table
   db.run(`
-    CREATE TABLE IF NOT EXISTS revenue (
+    CREATE TABLE IF NOT EXISTS financial_metrics (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      amount DECIMAL(15,2) NOT NULL,
+      metric_name VARCHAR(100) NOT NULL,
+      value DECIMAL(15,2) NOT NULL,
       period VARCHAR(50) NOT NULL,
-      category VARCHAR(100),
-      description TEXT,
+      change_percentage DECIMAL(5,2),
+      change_type VARCHAR(20),
+      additional_data TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `, (err) => {
     if (err) {
-      console.error('Error creating revenue table:', err.message);
+      console.error('Error creating financial_metrics table:', err.message);
     } else {
-      console.log('✅ Revenue table ready');
-      // Insert sample data if table is empty
-      insertSampleData();
+      console.log('✅ Financial metrics table ready');
     }
   });
+
+  // Insert sample data if tables are empty
+  insertSampleData();
 }
 
-// Insert sample revenue data
+// Insert sample data
 function insertSampleData() {
-  db.get('SELECT COUNT(*) as count FROM revenue', (err, row: any) => {
+
+  // Insert financial metrics data
+  db.get('SELECT COUNT(*) as count FROM financial_metrics', (err, row: any) => {
     if (err) {
-      console.error('Error checking revenue data:', err.message);
+      console.error('Error checking financial metrics data:', err.message);
       return;
     }
     
     if (row && row.count === 0) {
-      const sampleData = [
-        { amount: 2400000, period: 'Q1 2024', category: 'Sales', description: 'Q1 Revenue' },
-        { amount: 1800000, period: 'Q4 2023', category: 'Sales', description: 'Q4 Revenue' },
-        { amount: 2100000, period: 'Q3 2023', category: 'Sales', description: 'Q3 Revenue' },
-        { amount: 1950000, period: 'Q2 2023', category: 'Sales', description: 'Q2 Revenue' }
+      const metricsData = [
+        { 
+          metric_name: 'Revenue', 
+          value: 499521, 
+          period: 'Jun 2025', 
+          change_percentage: -17.47, 
+          change_type: 'decrease',
+          additional_data: JSON.stringify({ '3 month rolling average': 535355.87 })
+        },
+        { 
+          metric_name: 'Net Income (Loss)', 
+          value: -9215, 
+          period: 'Jun 2025', 
+          change_percentage: 107.26, 
+          change_type: 'decrease',
+          additional_data: JSON.stringify({ '3 month rolling average': 45933.21 })
+        },
+        { 
+          metric_name: 'Loans Funded', 
+          value: 600163628, 
+          period: 'Jun 2025', 
+          change_percentage: 7.29, 
+          change_type: 'increase',
+          additional_data: JSON.stringify({ 'YTD': 3224684827, 'total': 6065072192 })
+        },
+        { 
+          metric_name: '# Of Loans Funded', 
+          value: 1033, 
+          period: 'Jun 2025', 
+          change_percentage: 2.99, 
+          change_type: 'increase',
+          additional_data: JSON.stringify({ 'YTD': 5715, 'total': 10993 })
+        },
+        { 
+          metric_name: 'Bank Balance', 
+          value: 960266, 
+          period: 'Jun 2025', 
+          change_percentage: 14.73, 
+          change_type: 'increase',
+          additional_data: JSON.stringify({ '3 month rolling average': 827460.32 })
+        },
+        { 
+          metric_name: 'Working Capital (Cash + AR - AP - HST)', 
+          value: 491735, 
+          period: 'Jun 2025', 
+          change_percentage: 17.69, 
+          change_type: 'increase',
+          additional_data: JSON.stringify({ '3 month rolling average': 366930.06 })
+        },
+        { 
+          metric_name: 'Loans Processed', 
+          value: 2226833517, 
+          period: 'Jun 2025', 
+          change_percentage: -14.82, 
+          change_type: 'decrease',
+          additional_data: JSON.stringify({ 'YTD': 14225022481, 'total': 27169819975 })
+        },
+        { 
+          metric_name: '# Of Loans Processed', 
+          value: 3919, 
+          period: 'Jun 2025', 
+          change_percentage: -11.89, 
+          change_type: 'decrease',
+          additional_data: JSON.stringify({ 'YTD': 24152, 'total': 46213 })
+        }
       ];
 
-      const insertStmt = db.prepare(`
-        INSERT INTO revenue (amount, period, category, description)
-        VALUES (?, ?, ?, ?)
+      const metricsStmt = db.prepare(`
+        INSERT INTO financial_metrics (metric_name, value, period, change_percentage, change_type, additional_data)
+        VALUES (?, ?, ?, ?, ?, ?)
       `);
 
-      sampleData.forEach(data => {
-        insertStmt.run([data.amount, data.period, data.category, data.description]);
+      metricsData.forEach(data => {
+        metricsStmt.run([
+          data.metric_name, 
+          data.value, 
+          data.period, 
+          data.change_percentage, 
+          data.change_type, 
+          data.additional_data
+        ]);
       });
 
-      insertStmt.finalize((err) => {
+      metricsStmt.finalize((err) => {
         if (err) {
-          console.error('Error inserting sample data:', err.message);
+          console.error('Error inserting financial metrics data:', err.message);
         } else {
-          console.log('✅ Sample revenue data inserted');
+          console.log('✅ Sample financial metrics data inserted');
         }
       });
     }

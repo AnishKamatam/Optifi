@@ -92,6 +92,49 @@ class ApiService {
       method: 'DELETE',
     });
   }
+
+  // Get all financial metrics
+  async getFinancialMetrics(): Promise<ApiResponse<any[]>> {
+    return this.request('/api/financial-metrics');
+  }
+
+  // Get current financial metrics
+  async getCurrentFinancialMetrics(): Promise<ApiResponse<any[]>> {
+    return this.request('/api/financial-metrics/current');
+  }
+
+  // Get financial metric by ID
+  async getFinancialMetricById(id: number): Promise<ApiResponse<any>> {
+    return this.request(`/api/financial-metrics/${id}`);
+  }
+
+  // Get financial metric by name
+  async getFinancialMetricByName(name: string): Promise<ApiResponse<any>> {
+    return this.request(`/api/financial-metrics/name/${name}`);
+  }
+
+  // Create new financial metric
+  async createFinancialMetric(data: any): Promise<ApiResponse<any>> {
+    return this.request('/api/financial-metrics', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Update financial metric
+  async updateFinancialMetric(id: number, data: any): Promise<ApiResponse<any>> {
+    return this.request(`/api/financial-metrics/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Delete financial metric
+  async deleteFinancialMetric(id: number): Promise<ApiResponse<{ id: number }>> {
+    return this.request(`/api/financial-metrics/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiService = new ApiService();
